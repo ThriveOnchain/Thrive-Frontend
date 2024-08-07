@@ -24,7 +24,7 @@ export default function Header() {
         className="flex  items-center cursor-pointer"
       >
         <Image src="/logo.svg" height={38} width={38} alt="thrive logo" />
-        <span>Thrive</span>
+        <span className="">Thrive</span>
       </div>
       <div>
         {!mounted ? (
@@ -33,7 +33,7 @@ export default function Header() {
           <div className="flex items-center gap-3">
             <w3m-network-button />
             <Button onClick={() => open({ view: "Account" })}>
-              {shortenAddress(address ?? "", 4)}
+              {shortenAddress(address ?? "", 2)}
             </Button>
           </div>
         ) : (

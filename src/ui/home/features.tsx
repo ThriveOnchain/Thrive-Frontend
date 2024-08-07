@@ -15,7 +15,7 @@ import {
 export default function Features() {
   const router = useRouter();
   return (
-    <section className="flex flex-col items-center justify-between px-4 gap-8">
+    <section className="flex flex-col items-center justify-between px-4 gap-8 py-14">
       <div className="flex flex-col items-center">
         <p className="text-xs">Key Features</p>
         <h1 className="font-bold text-lg">Four ways to save on thrive</h1>

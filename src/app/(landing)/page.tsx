@@ -1,8 +1,8 @@
 "use client";
 
-import Heros from "./components/heros";
-import Features from "./components/features";
-import Integrations from "./components/integrations";
+import Heros from "../../ui/home/heros";
+import Features from "../../ui/home/features";
+import Integrations from "../../ui/home/integrations";
 
 export default function Home() {
   return (
