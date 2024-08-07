@@ -1,0 +1,1 @@
+https://www.npmjs.com/package/@tma.js/sdk-react?activeTab=readme
