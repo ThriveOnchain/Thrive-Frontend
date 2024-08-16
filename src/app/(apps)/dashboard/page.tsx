@@ -1,8 +1,16 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
@@ -24,23 +32,35 @@ export default function Dashboard() {
       <div className="lg:grid lg:grid-cols-2 flex flex-col items-center w-full gap-6">
         {savingPlans.map((item) => {
           return (
-            <div
+            <Link
+              href={item.isCommingSoon ? "#" : `${item.link.toLowerCase()}`}
               key={item.name}
-              className="w-full border flex gap-4 flex-col p-4 rounded-md cursor-pointer"
+              className={`block transition-all duration-300 w-full ${
+                item.isCommingSoon ? "opacity-70" : "hover:scale-105"
+              }`}
             >
-              <div
-                className="w-full flex justify-end items-end"
-                onClick={() => router.push(`/${item.link.toLowerCase()}`)}
-              >
-                <span className="bg-primary text-xs text-white p-1 rounded">
-                  {item.linkTitle}
-                </span>
-              </div>
-              <div className="text-sm">
-                <p className="font-semibold">{item.name}</p>
-                <p>{item.desc}</p>
-              </div>
-            </div>
+              <Card className="w-full h-full relative">
+                {!item.isCommingSoon && (
+                  <BorderBeam size={250} duration={8} delay={6} />
+                )}
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <Badge className="bg-primary text-white">
+                      {item.linkTitle}
+                    </Badge>
+                    {item.isCommingSoon && (
+                      <Badge className="bg-amber-500">Coming Soon</Badge>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardTitle className="mb-3">{item.name}</CardTitle>
+                  <CardDescription className="whitespace-normal">
+                    {item.desc}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </Link>
           );
         })}
       </div>
@@ -54,6 +74,7 @@ const savingPlans = [
     desc: "Automatically save daily, monthly or weekly",
     linkTitle: "SETUP",
     link: "/dashboard/thrivebank",
+    isCommingSoon: true,
   },
   {
     name: "Save Lock",

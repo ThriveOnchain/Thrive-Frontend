@@ -1,8 +1,5 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
@@ -12,7 +9,7 @@ export default function Dashboard() {
       <div className="w-full border p-8 rounded-md bg-muted gap-5 justify-between">
         <div className="flex items-center justify-between ">
           <Badge className="bg-orange-500">+ Quick save</Badge>
-          <Badge>Up to 9% APR</Badge>
+          <Badge>Up to 3% APR</Badge>
         </div>
 
         <div>
@@ -21,9 +18,15 @@ export default function Dashboard() {
         </div>
       </div>
 
-    
+      <div className="bg-primary/20 rounded-md p-5 text-primary">
+        <h1 className="font-bold"> What is Safelock</h1>
+        <p className="font-thin">
+          SafeLock is a cash lock that helps you prevent temptation and earn
+          micro rewards on your cash base on protocol supply to aave.
+        </p>
+      </div>
+
+      
     </main>
   );
 }
-
-
