@@ -7,7 +7,7 @@ import Footer from "@/ui/layout/footer";
 import { cookieToInitialState } from "wagmi";
 import { headers } from "next/headers";
 import { config } from "@/lib/config/wagmi";
-
+import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,6 +29,7 @@ export default function RootLayout({
             <Header />
             <div className="mt-[92px]   w-full">{children}</div>
             <Footer />
+            <Toaster />
           </div>
         </RootProvider>
       </body>

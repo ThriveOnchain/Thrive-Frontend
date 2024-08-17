@@ -17,25 +17,46 @@ import {
   FloatingInput,
   FloatingLabel,
 } from "@/components/ui/floating-input-label";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { TextField } from "@/components/amount-input";
-import { BalancePanel } from "@/components/wagmi/balance";
-import { useAccount, useReadContracts } from "wagmi";
-import { USDC_ADDRESS } from "@/lib/config/tokens";
-import { Address, erc20Abi } from "viem";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+import { BalancePanel } from "@/components/wagmi/balance";
+import { useAccount, useReadContracts, useWriteContract } from "wagmi";
+import { USDC_ADDRESS } from "@/lib/config/tokens";
+import { Address, erc20Abi, parseUnits } from "viem";
+import thrive_base from "../../lib/config/abi/thrive.json";
+import { useThriveWriteContract } from "@/hooks/useThriveWriteContract";
+import { THRIVE_BASE_SEPOLIA } from "@/lib/config/contract";
+import { lockPeriods } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+
+const RECOMENDED_LOCK_PERIOD = lockPeriods[2].value;
 export function CreateSafeLockDialogue() {
   const [preview, setPreview] = useState<boolean>(false);
   const [amount, setAmount] = useState<string>("");
   const [title, setTitle] = useState<string>("");
+  const [selectedLockPeriod, setSelectedLockPeriod] = useState<string>(
+    RECOMENDED_LOCK_PERIOD,
+  );
+  const [userSelected, setUserSelected] = useState<boolean>(false);
+
   const { address } = useAccount();
+
+  //FORM CONTROL FUNCTIONS
   const handleAmountChange = (value: string) => {
     setAmount(value);
   };
   const handleTitleChange = (value: string) => {
     setTitle(value);
   };
+  const handleLockPeriodChange = (value: string) => {
+    setSelectedLockPeriod(value);
+    setUserSelected(true);
+  };
+
+  //READ TOKEN DETAILS AND USER BALANCE
 
   const { isLoading, isSuccess, data, isError } = useReadContracts({
     contracts: [
@@ -53,7 +74,47 @@ export function CreateSafeLockDialogue() {
     ],
   });
 
-  const canPreview = amount !== "" && title !== "";
+  const tokenDecimals = data?.[1].result ?? 6;
+
+  const parsedAmount = useMemo(() => {
+    if (!amount) return "0";
+    try {
+      return parseUnits(amount, tokenDecimals).toString();
+    } catch (error) {
+      console.error("Error parsing amount:", error);
+      return "0";
+    }
+  }, [amount, tokenDecimals]);
+
+  const {
+    write,
+    isPending,
+    isConfirming,
+    isTrxSubmitted,
+    isConfirmed,
+    isWriteContractError,
+    reset,
+  } = useThriveWriteContract({
+    fn: "saveLockFunds",
+    trxTitle: "Creating Safelock",
+    abi: thrive_base,
+    contractAddress: THRIVE_BASE_SEPOLIA,
+    args: [USDC_ADDRESS, title, parsedAmount, parseInt(selectedLockPeriod)],
+  });
+
+  //WRITE FUNCTIONS
+  const handleCreateSafeLock = () => {
+    if (canPreview) {
+      write();
+    }
+  };
+
+  const canPreview =
+    amount !== "" &&
+    title !== "" &&
+    parseFloat(amount) > 1 &&
+    selectedLockPeriod !== "";
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -67,7 +128,7 @@ export function CreateSafeLockDialogue() {
           <DialogTitle>Create a safe lock</DialogTitle>
           <div className="flex w-full my-4">
             <DialogDescription className="flex-1 w-[65%]">
-              Anyone who has this link will be able to view this.
+              Lock yout funds for important things to avoid tempatation.
             </DialogDescription>
             <div className="relative w-[35%] flex-1 h-16 float-right">
               <Image
@@ -81,9 +142,54 @@ export function CreateSafeLockDialogue() {
         </DialogHeader>
         <div>
           {preview ? (
-            <div></div>
+            <div className="text-muted-foreground ">
+              <p className="px-4 my-5">
+                You are about to create a safe lock
+                <span className="text-primary font-semibold">
+                  {" "}
+                  (for {title})
+                </span>{" "}
+                <span className="text-primary font-semibold">
+                  {amount} USDC
+                </span>{" "}
+                for{" "}
+                <span className="text-primary font-semibold">
+                  {lockPeriods[parseInt(selectedLockPeriod)].label}.
+                </span>
+              </p>
+              <Button
+                onClick={handleCreateSafeLock}
+                disabled={isPending || isConfirming}
+                className="w-full"
+              >
+                {isPending || isConfirming
+                  ? "Processing..."
+                  : "Confirm Safe Lock"}
+              </Button>
+            </div>
           ) : (
             <div className="flex items-center space-x-2 flex-col w-full gap-6">
+              <ToggleGroup
+                type="single"
+                value={selectedLockPeriod.toString()}
+                onValueChange={handleLockPeriodChange}
+              >
+                {lockPeriods.map((period) => (
+                  <ToggleGroupItem
+                    key={period.value}
+                    value={period.value.toString()}
+                    className="relative w-fit border "
+                  >
+                    {period.label}
+                    {period.value === RECOMENDED_LOCK_PERIOD &&
+                      !userSelected && (
+                        <div className="absolute -bottom-2 right-0 p-0  text-[8px] bg-green-500 text-white px-[3px] py-[1px] rounded-full">
+                          Recommended
+                        </div>
+                      )}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
               <div className="relative w-full">
                 <div>
                   <TextField
@@ -134,11 +240,7 @@ export function CreateSafeLockDialogue() {
           )}
         </div>
         <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
+          <DialogClose asChild></DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

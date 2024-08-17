@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { shortenAddress } from "@/lib/address";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useRouter } from "next/navigation";
+import { ThriveEvmConnectButton } from "@/components/wagmi/connect-button";
 
 export default function Header() {
   const { isConnected, address } = useAccount();
@@ -26,20 +27,7 @@ export default function Header() {
         <Image src="/logo.svg" height={38} width={38} alt="thrive logo" />
         <span className="">Thrive</span>
       </div>
-      <div>
-        {!mounted ? (
-          <Button variant="outline">Loading...</Button>
-        ) : isConnected ? (
-          <div className="flex items-center gap-3">
-            <w3m-network-button />
-            <Button onClick={() => open({ view: "Account" })}>
-              {shortenAddress(address ?? "", 2)}
-            </Button>
-          </div>
-        ) : (
-          <w3m-button />
-        )}
-      </div>
+      <ThriveEvmConnectButton/>
     </nav>
   );
 }

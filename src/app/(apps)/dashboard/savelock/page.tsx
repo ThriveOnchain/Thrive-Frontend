@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { CreateSafeLockDialogue } from "@/ui/savelock/transaction-modal";
-import { SafeLockAnalyticsTabs } from "./tabs";
+import { SafeLockAnalyticsTabs } from "../../../../ui/savelock/tabs";
 
 export default function Dashboard() {
   const router = useRouter();
