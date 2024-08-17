@@ -11,7 +11,9 @@ import { useEffect } from "react";
 export type TrxTitle =
   | "Creating Safelock"
   | "Creating Target Save"
-  | "Adding to Target Saving";
+  | "Adding to Target Saving"
+  | "Approving USDC"
+  | "Withdrawing Funds";
 
 export const useThriveWriteContract = ({
   fn,
@@ -37,7 +39,10 @@ export const useThriveWriteContract = ({
     error: WriteContractError,
     reset,
   } = useWriteContract();
-
+  console.log(
+    "isWriteContractError isWriteContractError",
+    isWriteContractError,
+  );
   const {
     isLoading: isConfirming,
     isSuccess: isConfirmed,
@@ -95,20 +100,3 @@ export const useThriveWriteContract = ({
     WaitForTransactionReceiptError,
   };
 };
-
-// export const ToastDemo = () => {
-//     const { toast } = useToast()
-
-//     return (
-//       <Button
-//         onClick={() => {
-//           toast({
-//             title: "Scheduled: Catch up",
-//             description: "Friday, February 10, 2023 at 5:57 PM",
-//           })
-//         }}
-//       >
-//         Show Toast
-//       </Button>
-//     )
-//   }

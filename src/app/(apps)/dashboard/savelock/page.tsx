@@ -3,9 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { CreateSafeLockDialogue } from "@/ui/savelock/transaction-modal";
 import { SafeLockAnalyticsTabs } from "../../../../ui/savelock/tabs";
+import { useAccount } from "wagmi";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   const router = useRouter();
+  const { isConnected } = useAccount();
+
+  const { toast } = useToast();
 
   return (
     <main className="flex flex-col items-center justify-between px-4  max-w-4xl mx-auto gap-4 ">
@@ -20,7 +26,22 @@ export default function Dashboard() {
           <p className="text-lg font-bold">$**</p>
         </div>
 
-        <CreateSafeLockDialogue />
+        {isConnected ? (
+          <CreateSafeLockDialogue />
+        ) : (
+          <Button
+            onClick={() => {
+              toast({
+                title: "Wallet not Connected",
+                variant: "destructive",
+                description:
+                  "Kindly connect wallet, Sign in with socials is recommended",
+              });
+            }}
+          >
+            Create a safe lock
+          </Button>
+        )}
       </div>
 
       <div className="bg-primary/20 rounded-md p-5 text-primary">

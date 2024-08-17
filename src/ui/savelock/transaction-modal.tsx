@@ -31,6 +31,8 @@ import { useThriveWriteContract } from "@/hooks/useThriveWriteContract";
 import { THRIVE_BASE_SEPOLIA } from "@/lib/config/contract";
 import { lockPeriods } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Erc20ApprovalChecker } from "@/components/wagmi/approval-checker";
+import { ThriveEvmConnectButton } from "@/components/wagmi/connect-button";
 
 const RECOMENDED_LOCK_PERIOD = lockPeriods[2].value;
 export function CreateSafeLockDialogue() {
@@ -77,12 +79,22 @@ export function CreateSafeLockDialogue() {
   const tokenDecimals = data?.[1].result ?? 6;
 
   const parsedAmount = useMemo(() => {
-    if (!amount) return "0";
+    if (!amount)
+      return {
+        bigint_value: 0n,
+        string_value: "0",
+      };
     try {
-      return parseUnits(amount, tokenDecimals).toString();
+      return {
+        bigint_value: parseUnits(amount, tokenDecimals),
+        string_value: parseUnits(amount, tokenDecimals).toString(),
+      };
     } catch (error) {
       console.error("Error parsing amount:", error);
-      return "0";
+      return {
+        bigint_value: 0n,
+        string_value: "0",
+      };
     }
   }, [amount, tokenDecimals]);
 
@@ -99,7 +111,12 @@ export function CreateSafeLockDialogue() {
     trxTitle: "Creating Safelock",
     abi: thrive_base,
     contractAddress: THRIVE_BASE_SEPOLIA,
-    args: [USDC_ADDRESS, title, parsedAmount, parseInt(selectedLockPeriod)],
+    args: [
+      USDC_ADDRESS,
+      title,
+      parsedAmount.string_value,
+      parseInt(selectedLockPeriod),
+    ],
   });
 
   //WRITE FUNCTIONS
@@ -112,8 +129,20 @@ export function CreateSafeLockDialogue() {
   const canPreview =
     amount !== "" &&
     title !== "" &&
-    parseFloat(amount) > 1 &&
+    parseFloat(amount) >= 1 &&
     selectedLockPeriod !== "";
+
+  // const [isSuccessSave, setIsSuccessSave] = useState(false);
+
+  const resetState = () => {
+    setPreview(false);
+    setAmount("");
+    setTitle("");
+    setSelectedLockPeriod(RECOMENDED_LOCK_PERIOD);
+    setUserSelected(false);
+    // setIsSuccessSave(false);
+    reset();
+  };
 
   return (
     <Dialog>
@@ -141,7 +170,19 @@ export function CreateSafeLockDialogue() {
           </div>
         </DialogHeader>
         <div>
-          {preview ? (
+          {isConfirmed ? (
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-green-600 mb-2">
+                Success!
+              </h3>
+              <p className="mb-4">
+                Your safe lock has been created successfully.
+              </p>
+              <Button onClick={() => resetState()} className="w-full">
+                Create Another Safe Lock
+              </Button>
+            </div>
+          ) : preview ? (
             <div className="text-muted-foreground ">
               <p className="px-4 my-5">
                 You are about to create a safe lock
@@ -228,14 +269,22 @@ export function CreateSafeLockDialogue() {
                   Safe lock title
                 </FloatingLabel>
               </div>
-
-              <Button
-                onClick={() => setPreview(true)}
-                disabled={!canPreview}
-                className="w-full"
-              >
-                Preview
-              </Button>
+              {address ? (
+                <Erc20ApprovalChecker
+                  userAddress={address}
+                  askingAmount={parsedAmount.bigint_value}
+                >
+                  <Button
+                    onClick={() => setPreview(true)}
+                    disabled={!canPreview}
+                    className="w-full"
+                  >
+                    Preview
+                  </Button>
+                </Erc20ApprovalChecker>
+              ) : (
+                <ThriveEvmConnectButton />
+              )}
             </div>
           )}
         </div>
