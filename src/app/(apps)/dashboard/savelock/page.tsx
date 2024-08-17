@@ -1,9 +1,12 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { CreateSafeLockDialogue } from "@/ui/savelock/transaction-modal";
+import { SafeLockAnalyticsTabs } from "./tabs";
 
 export default function Dashboard() {
   const router = useRouter();
+
   return (
     <main className="flex flex-col items-center justify-between px-4  max-w-4xl mx-auto gap-4 ">
       <div className="w-full border p-8 rounded-md bg-muted gap-5 justify-between">
@@ -16,6 +19,8 @@ export default function Dashboard() {
           <p className="text-xs"> Total Savings</p>
           <p className="text-lg font-bold">$**</p>
         </div>
+
+        <CreateSafeLockDialogue />
       </div>
 
       <div className="bg-primary/20 rounded-md p-5 text-primary">
@@ -26,7 +31,7 @@ export default function Dashboard() {
         </p>
       </div>
 
-      
+      <SafeLockAnalyticsTabs />
     </main>
   );
 }
