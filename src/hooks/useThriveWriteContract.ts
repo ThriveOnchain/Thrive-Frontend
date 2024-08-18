@@ -13,7 +13,8 @@ export type TrxTitle =
   | "Creating Target Save"
   | "Adding to Target Saving"
   | "Approving USDC"
-  | "Withdrawing Funds";
+  | "Withdrawing Funds"
+  | "Claiming accumulated rewards";
 
 export const useThriveWriteContract = ({
   fn,

@@ -19,12 +19,12 @@ export default function Header() {
   }, []);
 
   return (
-    <nav className="fixed top-0  left-0 right-0 w-full flex  items-center justify-between px-8 py-4 border-b bg-background/15 backdrop-blur-md">
+    <nav className="fixed top-0  left-0 right-0 w-full flex  items-center justify-between px-8 py-4 border-b bg-background/40 backdrop-blur-lg">
       <div
         onClick={() => router.push("/")}
         className="flex  items-center cursor-pointer"
       >
-        <Image src="/logo.svg" height={38} width={38} alt="thrive logo" />
+        <Image src="/logo.svg" height={30} width={30} alt="thrive logo" />
         <span className="">Thrive</span>
       </div>
       <ThriveEvmConnectButton/>

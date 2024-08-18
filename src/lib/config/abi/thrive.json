@@ -69,6 +69,25 @@
         "type": "address"
       },
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SafeLockRewardsClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
         "indexed": true,
         "internalType": "address",
         "name": "token",
@@ -149,7 +168,7 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "startTime",
         "type": "uint256"
@@ -266,6 +285,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "claimSafeLockRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -353,6 +379,11 @@
       {
         "components": [
           {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
             "internalType": "address",
             "name": "owner",
             "type": "address"
@@ -360,6 +391,11 @@
           {
             "internalType": "uint256",
             "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "withdrawnAmount",
             "type": "uint256"
           },
           {
@@ -381,6 +417,16 @@
             "internalType": "address",
             "name": "lockToken",
             "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "withdrawn",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "accumulatedRewards",
+            "type": "uint256"
           }
         ],
         "internalType": "struct ThriveUtils.SaveLock",
@@ -452,6 +498,25 @@
         "internalType": "struct ThriveUtils.TargetSavings",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "getUnclaimedSafeLockRewards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -553,6 +618,11 @@
     "name": "saveLocks",
     "outputs": [
       {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "owner",
         "type": "address"
@@ -560,6 +630,11 @@
       {
         "internalType": "uint256",
         "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "withdrawnAmount",
         "type": "uint256"
       },
       {
@@ -581,6 +656,16 @@
         "internalType": "address",
         "name": "lockToken",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "withdrawn",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "accumulatedRewards",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -653,6 +738,25 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "userUSDRewards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
