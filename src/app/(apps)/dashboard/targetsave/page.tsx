@@ -42,34 +42,7 @@ export default function Dashboard() {
   };
   return (
     <main className="flex flex-col items-center justify-between px-4  max-w-4xl mx-auto gap-4 ">
-      {/* <div className="w-full border p-8 rounded-md bg-muted gap-5 justify-between">
-        <div className="flex items-center justify-between mb-2">
-          <Badge className="bg-orange-500">+ Safe locks</Badge>
-          <Badge>Up to 3% APR</Badge>
-        </div>
 
-        <div>
-          <p className="text-xs"> Total Savings</p>
-          <p className="text-lg font-bold">$**</p>
-        </div>
-
-        {isConnected ? (
-          <CreateSafeLockDialogue />
-        ) : (
-          <Button
-            onClick={() => {
-              toast({
-                title: "Wallet not Connected",
-                variant: "destructive",
-                description:
-                  "Kindly connect wallet, Sign in with socials is recommended",
-              });
-            }}
-          >
-            Create a safe lock
-          </Button>
-        )}
-      </div> */}
 
       <Card className="w-full">
         <CardHeader className="flex flex-row items-center justify-between">
